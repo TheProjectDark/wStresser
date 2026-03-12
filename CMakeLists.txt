@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
         MainFrame.cpp
+        Functions/memLeakTest.h
+        Functions/memLeakTest.cpp
 )
 
 find_package(wxWidgets REQUIRED COMPONENTS core base)

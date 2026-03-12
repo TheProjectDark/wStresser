@@ -7,14 +7,16 @@
  * (at your option) any later version.
  */
 
+#pragma once
 #include <wx-3.3/wx/wx.h>
 
-class MainFrame : public wxFrame {
-    public:
-        MainFrame(const wxString& title);
+class MainFrame;
 
-    private:
-        void OnExit(wxCommandEvent& event);
-        void OnMemLeak(wxCommandEvent& event);
-        void OnAbout(wxCommandEvent& event);
+class memLeakTestFrame : public wxFrame {
+ public:
+ memLeakTestFrame(const wxString& title);
+
+private:
+ void onExit(wxCommandEvent &event);
+
 };

@@ -7,14 +7,8 @@
  * (at your option) any later version.
  */
 
-#include <wx-3.3/wx/wx.h>
+#include "memLeakTest.h"
 
-class MainFrame : public wxFrame {
-    public:
-        MainFrame(const wxString& title);
-
-    private:
-        void OnExit(wxCommandEvent& event);
-        void OnMemLeak(wxCommandEvent& event);
-        void OnAbout(wxCommandEvent& event);
-};
+memLeakTestFrame::memLeakTestFrame(const wxString &title) {
+ wxFrame::Create(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(200, 200));
+}
