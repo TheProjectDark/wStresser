@@ -11,6 +11,8 @@
 #include <wx/wx.h>
 #include <atomic>
 #include <thread>
+#include <vector>
+#include <mutex>
 
 class memLeakTestFrame : public wxFrame {
 public:
@@ -18,13 +20,17 @@ public:
     ~memLeakTestFrame();
 
 private:
-    std::thread         m_stressThread;
-    std::atomic<bool>   m_running{false};
-    wxStaticText*       m_statusLabel;
+    std::thread             m_stressThread;
+    std::atomic<bool>       m_running{false};
+    wxStaticText*           m_statusLabel   = nullptr;
+    std::vector<char*>      m_chunks;
+    std::mutex              m_chunksMutex;
 
     void StartStressThread(size_t chunkSizeMB, int intervalMs);
     void stressTestMemoryLeak(size_t chunkSizeMB, int intervalMs);
+    void freeMemory();           //frees all allocated chunks
     void OnExit(wxCommandEvent& event);
+    void OnClose(wxCloseEvent& event);
 
     wxDECLARE_EVENT_TABLE();
 };

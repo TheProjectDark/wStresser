@@ -1,5 +1,5 @@
 /*
-* wEditor
+ * wEditor
  * Copyright (C) 2026 TheProjectDark
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 
 wxBEGIN_EVENT_TABLE(memLeakTestFrame, wxFrame)
     EVT_BUTTON(wxID_ANY, memLeakTestFrame::OnExit)
+    EVT_CLOSE(memLeakTestFrame::OnClose)
 wxEND_EVENT_TABLE()
 
 memLeakTestFrame::memLeakTestFrame(const wxString& title)
@@ -37,8 +38,6 @@ memLeakTestFrame::memLeakTestFrame(const wxString& title)
 
 memLeakTestFrame::~memLeakTestFrame() {
     m_running = false;
-    if (m_stressThread.joinable())
-        m_stressThread.join();
 }
 
 void memLeakTestFrame::StartStressThread(size_t chunkSizeMB, int intervalMs) {
@@ -49,7 +48,6 @@ void memLeakTestFrame::StartStressThread(size_t chunkSizeMB, int intervalMs) {
 }
 
 void memLeakTestFrame::stressTestMemoryLeak(size_t chunkSizeMB, int intervalMs) {
-    std::vector<char*> leakedChunks;
     const size_t chunkSizeBytes = chunkSizeMB * 1024 * 1024;
     size_t totalLeaked = 0;
 
@@ -57,22 +55,44 @@ void memLeakTestFrame::stressTestMemoryLeak(size_t chunkSizeMB, int intervalMs) 
         char* chunk = new char[chunkSizeBytes];
         std::fill(chunk, chunk + chunkSizeBytes, 0xAB);
 
-        leakedChunks.push_back(chunk);
+        {
+            std::lock_guard<std::mutex> lock(m_chunksMutex);
+            m_chunks.push_back(chunk);
+        }
+
         totalLeaked += chunkSizeMB;
 
-        wxString msg = wxString::Format("Leaked: %zu MB total", totalLeaked);  //Showing leaked mb
+        wxString msg = wxString::Format("Leaked: %zu MB total", totalLeaked);
         wxTheApp->CallAfter([this, msg]() {
+            //null check prevents dangling pointer after frame closes
             if (m_statusLabel)
                 m_statusLabel->SetLabel(msg);
         });
 
         std::this_thread::sleep_for(std::chrono::milliseconds(intervalMs));
     }
+}
 
-    //Intentional: chunks in leakedChunks are never freed (that's the test)
+void memLeakTestFrame::freeMemory() {
+    std::lock_guard<std::mutex> lock(m_chunksMutex);
+    for (char* ptr : m_chunks)
+        delete[] ptr;
+    m_chunks.clear();
+}
+
+void memLeakTestFrame::OnClose(wxCloseEvent& event) {
+    m_running = false;
+
+    //must join before freeing — thread may still be writing to m_chunks
+    if (m_stressThread.joinable())
+        m_stressThread.join();
+
+    freeMemory();
+
+    m_statusLabel = nullptr;
+    event.Skip();
 }
 
 void memLeakTestFrame::OnExit(wxCommandEvent& event) {
-    m_running = false;
     Close(true);
 }
