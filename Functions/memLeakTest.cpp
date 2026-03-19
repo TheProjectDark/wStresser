@@ -1,7 +1,10 @@
 /*
- * wEditor
+* wEditor
  * Copyright (C) 2026 TheProjectDark
- * ...
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  */
 
 #include "memLeakTest.h"
@@ -57,7 +60,7 @@ void memLeakTestFrame::stressTestMemoryLeak(size_t chunkSizeMB, int intervalMs) 
         leakedChunks.push_back(chunk);
         totalLeaked += chunkSizeMB;
 
-        wxString msg = wxString::Format("Leaked: %zu MB total", totalLeaked);
+        wxString msg = wxString::Format("Leaked: %zu MB total", totalLeaked);  //Showing leaked mb
         wxTheApp->CallAfter([this, msg]() {
             if (m_statusLabel)
                 m_statusLabel->SetLabel(msg);
@@ -66,7 +69,7 @@ void memLeakTestFrame::stressTestMemoryLeak(size_t chunkSizeMB, int intervalMs) 
         std::this_thread::sleep_for(std::chrono::milliseconds(intervalMs));
     }
 
-    // Intentional: chunks in leakedChunks are never freed (that's the test)
+    //Intentional: chunks in leakedChunks are never freed (that's the test)
 }
 
 void memLeakTestFrame::OnExit(wxCommandEvent& event) {
