@@ -8,15 +8,23 @@
  */
 
 #pragma once
-#include <wx-3.3/wx/wx.h>
-
-class MainFrame;
+#include <wx/wx.h>
+#include <atomic>
+#include <thread>
 
 class memLeakTestFrame : public wxFrame {
- public:
- memLeakTestFrame(const wxString& title);
+public:
+    memLeakTestFrame(const wxString& title);
+    ~memLeakTestFrame();
 
 private:
- void onExit(wxCommandEvent &event);
+    std::thread         m_stressThread;
+    std::atomic<bool>   m_running{false};
+    wxStaticText*       m_statusLabel;
 
+    void StartStressThread(size_t chunkSizeMB, int intervalMs);
+    void stressTestMemoryLeak(size_t chunkSizeMB, int intervalMs);
+    void OnExit(wxCommandEvent& event);
+
+    wxDECLARE_EVENT_TABLE();
 };
