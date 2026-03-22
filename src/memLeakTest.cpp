@@ -7,7 +7,7 @@
  * (at your option) any later version.
  */
 
-#include "memLeakTest.h"
+#include "../include/memLeakTest.h"
 #include <wx/wx.h>
 #include <vector>
 #include <thread>

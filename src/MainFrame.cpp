@@ -7,8 +7,8 @@
  * (at your option) any later version.
  */
 
-#include "MainFrame.h"
-#include "Functions/memLeakTest.h"
+#include "../include/MainFrame.h"
+#include "../include/memLeakTest.h"
 
 class App : public wxApp
 {
