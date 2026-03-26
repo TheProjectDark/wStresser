@@ -16,6 +16,8 @@ public:
     bool OnInit();
 };
 
+wxIMPLEMENT_APP(App);
+
 MainFrame::MainFrame(const wxString& title)
         : wxFrame(nullptr, wxID_ANY, title)
 {
@@ -44,8 +46,6 @@ MainFrame::MainFrame(const wxString& title)
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
-
-wxIMPLEMENT_APP(App);
 
 //show main frame
 bool App::OnInit() {
