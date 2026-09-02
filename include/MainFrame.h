@@ -16,5 +16,6 @@ class MainFrame : public wxFrame {
     private:
         void OnExit(wxCommandEvent& event);
         void OnMemLeak(wxCommandEvent& event);
+        void OnVulkanTest(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
 };

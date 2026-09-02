@@ -33,12 +33,14 @@ MainFrame::MainFrame(const wxString& title)
     SetMenuBar(menuBar);
 
     wxButton* memLeakTest = new wxButton(panel, wxID_ANY, "Memory leak test");
+    wxButton* vulkanTest = new wxButton(panel, wxID_ANY, "Vulkan graphics test (in development)");
 
     //sizers
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
     //button sizers
     mainSizer->Add(memLeakTest, 0, wxALL, 10);
+    mainSizer->Add(vulkanTest, 0, wxALL, 10);
 
     panel->SetSizer(mainSizer);
 
