@@ -9,6 +9,12 @@
 
 #include "../include/MainFrame.h"
 #include "../include/memLeakTest.h"
+#include "VulkanGraphics/VulkanGraphics.h"
+
+#include <wx/stdpaths.h>
+
+#include <chrono>
+#include <thread>
 
 class App : public wxApp
 {
@@ -45,18 +51,39 @@ MainFrame::MainFrame(const wxString& title)
     panel->SetSizer(mainSizer);
 
     memLeakTest->Bind(wxEVT_BUTTON, &MainFrame::OnMemLeak, this);
+    vulkanTest->Bind(wxEVT_BUTTON, &MainFrame::OnVulkanTest, this);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
 
 //show main frame
 bool App::OnInit() {
+    for (int i = 1; i < argc; ++i) {
+        if (wxString(argv[i]) == "--vulkan-test") {
+            VulkanGraphics app;
+            app.Show();
+
+            while (!app.ShouldClose()) {
+                glfwPollEvents();
+                std::this_thread::sleep_for(std::chrono::milliseconds(16));
+            }
+
+            app.Close();
+            return false;
+        }
+    }
+
     SetExitOnFrameDelete(true);
 
     MainFrame* mainFrame = new MainFrame("wStresser");
     mainFrame->SetClientSize(mainFrame->FromDIP(wxSize(300, 400)));
     mainFrame->Show();
     return true;
+}
+
+void MainFrame::OnVulkanTest(wxCommandEvent& event) {
+    const wxString executablePath = wxStandardPaths::Get().GetExecutablePath();
+    wxExecute(executablePath + " --vulkan-test", wxEXEC_ASYNC);
 }
 
 void MainFrame::OnMemLeak(wxCommandEvent& event) {
