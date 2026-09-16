@@ -132,6 +132,7 @@ VulkanGraphics::VulkanGraphics() {
 
     m_initialized = InitializeVulkan();
     m_startTime = std::chrono::steady_clock::now();
+    m_fpsTimer = m_startTime;
 }
 
 VulkanGraphics::~VulkanGraphics() {
@@ -307,7 +308,7 @@ bool VulkanGraphics::CreateSwapchain() {
             f.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
             chosen = f;
 
-    VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
+    VkPresentModeKHR presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
     uint32_t pmCount = 0;
     vkGetPhysicalDeviceSurfacePresentModesKHR(m_physicalDevice, m_surface, &pmCount, nullptr);
     std::vector<VkPresentModeKHR> pms(pmCount);
@@ -940,6 +941,20 @@ void VulkanGraphics::DrawFrame() {
     }
 
     m_currentFrame = (m_currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+    //FPS
+    ++m_frameCount;
+    auto now = std::chrono::steady_clock::now();
+    float elapsed = std::chrono::duration<float>(now - m_fpsTimer).count();
+    if (elapsed >= 0.5f) {
+        m_fps = m_frameCount / elapsed;
+        m_frameCount = 0;
+        m_fpsTimer = now;
+        if (m_window) {
+            char buf[128];
+            std::snprintf(buf, sizeof(buf), "Vulkan graphics test — %.1f FPS", m_fps);
+            glfwSetWindowTitle(m_window, buf);
+        }
+    }
 }
 
 //re-creating swapchain and cleaning up resources

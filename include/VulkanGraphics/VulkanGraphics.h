@@ -30,6 +30,7 @@ public:
     bool IsReady() const;
     bool IsRunning() const;
     bool ShouldClose() const;
+    float GetFPS() const { return m_fps; }
 
 private:
     static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
@@ -94,6 +95,11 @@ private:
     bool m_initialized = false;
     bool m_glfwInitialized = false;
     bool m_framebufferResized = false;
+
+    //FPS
+    float m_fps = 0.0f;
+    uint32_t m_frameCount = 0;
+    std::chrono::steady_clock::time_point m_fpsTimer;
 
     std::chrono::steady_clock::time_point m_startTime;
 
