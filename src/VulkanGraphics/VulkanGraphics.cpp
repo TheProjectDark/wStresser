@@ -120,7 +120,7 @@ VulkanGraphics::VulkanGraphics() {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-    m_window = glfwCreateWindow(800, 600, "Vulkan spinning cube", nullptr, nullptr);
+    m_window = glfwCreateWindow(800, 600, "Vulkan graphics test", nullptr, nullptr);
     if (!m_window) {
         glfwTerminate();
         m_glfwInitialized = false;
