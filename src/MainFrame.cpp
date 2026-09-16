@@ -11,10 +11,10 @@
 #include "../include/memLeakTest.h"
 #include "VulkanGraphics/VulkanGraphics.h"
 
+#include <wx/wx.h>
 #include <wx/stdpaths.h>
 
-#include <chrono>
-#include <thread>
+#include <cstring>
 
 class App : public wxApp
 {
@@ -22,7 +22,7 @@ public:
     bool OnInit();
 };
 
-wxIMPLEMENT_APP(App);
+wxIMPLEMENT_APP_NO_MAIN(App);
 
 MainFrame::MainFrame(const wxString& title)
         : wxFrame(nullptr, wxID_ANY, title)
@@ -39,12 +39,9 @@ MainFrame::MainFrame(const wxString& title)
     SetMenuBar(menuBar);
 
     wxButton* memLeakTest = new wxButton(panel, wxID_ANY, "Memory leak test");
-    wxButton* vulkanTest = new wxButton(panel, wxID_ANY, "Vulkan graphics test (in development)");
+    wxButton* vulkanTest = new wxButton(panel, wxID_ANY, "Vulkan graphics test");
 
-    //sizers
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-
-    //button sizers
     mainSizer->Add(memLeakTest, 0, wxALL, 10);
     mainSizer->Add(vulkanTest, 0, wxALL, 10);
 
@@ -56,23 +53,7 @@ MainFrame::MainFrame(const wxString& title)
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
 }
 
-//show main frame
 bool App::OnInit() {
-    for (int i = 1; i < argc; ++i) {
-        if (wxString(argv[i]) == "--vulkan-test") {
-            VulkanGraphics app;
-            app.Show();
-
-            while (!app.ShouldClose()) {
-                glfwPollEvents();
-                std::this_thread::sleep_for(std::chrono::milliseconds(16));
-            }
-
-            app.Close();
-            return false;
-        }
-    }
-
     SetExitOnFrameDelete(true);
 
     MainFrame* mainFrame = new MainFrame("wStresser");
@@ -98,4 +79,23 @@ void MainFrame::OnAbout(wxCommandEvent& event) {
 
 void MainFrame::OnExit(wxCommandEvent& event) {
     Close(true);
+}
+
+int main(int argc, char** argv) {
+    for (int i = 1; i < argc; ++i) {
+        if (std::strcmp(argv[i], "--vulkan-test") == 0) {
+            VulkanGraphics app;
+            app.Show();
+
+            while (!app.ShouldClose()) {
+                glfwPollEvents();
+                app.DrawFrame();
+            }
+
+            app.Close();
+            return 0;
+        }
+    }
+
+    return wxEntry(argc, argv);
 }
