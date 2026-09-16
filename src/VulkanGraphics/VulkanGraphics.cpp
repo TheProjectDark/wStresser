@@ -580,7 +580,7 @@ bool VulkanGraphics::CreateGraphicsPipeline() {
     rast.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rast.polygonMode = VK_POLYGON_MODE_FILL;
     rast.lineWidth = 1.0f;
-    rast.cullMode = VK_CULL_MODE_BACK_BIT;
+    rast.cullMode = VK_CULL_MODE_NONE;
     rast.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 
     VkPipelineMultisampleStateCreateInfo ms{};
