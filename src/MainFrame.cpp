@@ -41,11 +41,11 @@ MainFrame::MainFrame(const wxString& title)
     wxButton* memLeakTest = new wxButton(panel, wxID_ANY, "Memory leak test");
     wxButton* vulkanTest = new wxButton(panel, wxID_ANY, "Vulkan graphics test");
 
-    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-    mainSizer->Add(memLeakTest, 0, wxALL, 10);
-    mainSizer->Add(vulkanTest, 0, wxALL, 10);
-
-    panel->SetSizer(mainSizer);
+    //sizers
+    wxFlexGridSizer* mainFrameSizer = new wxFlexGridSizer(2, 1, 0, 0);
+    mainFrameSizer->Add(memLeakTest, 1, wxEXPAND | wxALL, 5);
+    mainFrameSizer->Add(vulkanTest,  1, wxEXPAND | wxALL, 5);
+    panel->SetSizer(mainFrameSizer);
 
     memLeakTest->Bind(wxEVT_BUTTON, &MainFrame::OnMemLeak, this);
     vulkanTest->Bind(wxEVT_BUTTON, &MainFrame::OnVulkanTest, this);
