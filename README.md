@@ -9,4 +9,8 @@ It is designed to help you identify performance bottlenecks and stability issues
 - Easy to use: Simple and easy to use GUI
 - Various stress tests
 
+## Screenshots
+![Screenshot 1](assets/scr.png)
+![ScreenshotMemTest](assets/scrmem.png)
+![ScreenshotVkTest](assets/scrvk.png)
 > **Note:** This tool is indev and does not have some features yet. Use on your own risk.

@@ -43,6 +43,7 @@ MainFrame::MainFrame(const wxString& title)
 
     //sizers
     wxFlexGridSizer* mainFrameSizer = new wxFlexGridSizer(2, 1, 0, 0);
+    mainFrameSizer->AddGrowableCol(0, 1);
     mainFrameSizer->Add(memLeakTest, 1, wxEXPAND | wxALL, 5);
     mainFrameSizer->Add(vulkanTest,  1, wxEXPAND | wxALL, 5);
     panel->SetSizer(mainFrameSizer);
